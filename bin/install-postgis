@@ -1,0 +1,4 @@
+#!/bin/bash
+
+component_name=$(${OPENSHIFT_DATA_DIR}.bigsql/pgc list | grep postgis | awk '{ print $2 }')
+${OPENSHIFT_DATA_DIR}.bigsql/pgc install $component_name
