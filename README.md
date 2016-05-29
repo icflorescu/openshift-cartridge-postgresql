@@ -2,7 +2,7 @@
 
 ![PostgreSQL on OpenShift by Ionut-Cristian Florescu](https://cloud.githubusercontent.com/assets/581999/15590729/ce16d6f6-23a1-11e6-9b4d-41f8f17a32a3.png)
 
-This is a custom OpenShift cartridge providing a contemporary PostgreSQL version, courtesy of [bigsql.org](http://www.bigsql.org/).
+This is a custom OpenShift cartridge aiming to provide the most recent stable PostgreSQL version packaged by [bigsql.org](http://www.bigsql.org/).
 
 ## Installation
 
@@ -29,7 +29,7 @@ Using `rhc` utility, you can also create "from scratch" an applocation based on 
 
 ## Usage
 
-### Connect from a web application
+### Connect from a web application cartridge
 
 Use the following environment variables to connect from an application running in the main web cartridge:
 - `OPENSHIFT_PG_HOST`
@@ -95,11 +95,13 @@ A `vacuumdb -a -f` command is issued when executing the cartridge `tidy` script,
 
 ### Optional features
 
-In order to conserve space, the `postgis` extension is not installed by default. In order to use it, you'll have to login to your cartridge and run `postgres/bin/install-postgis`, then execute the SQL statement `CREATE EXTENSION postgis`.
+This cartridge **does not autoupdate**. If you need this feature and are willing to contribute, feel free to PR.
+
+In order to conserve space, the `postgis` extension is not installed by default, but the cartridge includes a handy script to install it. You'll have to login to your gear and run `postgres/bin/install-postgis`, then execute the SQL statement `CREATE EXTENSION postgis`.
 
 ### Full-text search for languages other than English
 
-You can alter the default full-text search behavior by changing/adding the necessary files in the PostgreSQL shared folder (see the note on files and folder locations above). The files distributed by default in the PostgreSQL package are insufficient for languages other than English, but you can add your own `*.stop` or dictionary files, or even modify the standard `unaccent.rules` as needed.
+You can alter the default full-text search behavior by changing/adding the necessary files in `${OPENSHIFT_DATA_DIR}.bigsql/pg95/share/postgresql/tsearch_data`. The files distributed by default in the PostgreSQL package are insufficient for languages other than English, but you can add your own `*.stop` or dictionary files, or even modify the standard `unaccent.rules` as needed. Have a look at [this repo](https://github.com/icflorescu/postgresql-tsearch-utils) to learn more.
 
 ## Read carefully before raising issues
 
@@ -107,11 +109,16 @@ I'm getting lots of questions from people just learning to do web development or
 
 ## Asking for help or a new feature
 
-See the note above. If you need help and are willing to pay for it, drop me a message. If you have an idea about a new feature that doesn't break existing ones and you're willing to invest effort to make it happen, have a look at the code and feel free to make a pull-request.
+See the note above. If you need help and are willing to pay for it, drop me a message. If you have an idea about a new feature that doesn't break existing ones and you're willing to invest effort to make it happen, have a look at the code and feel free to make a PR.
+
+## Helping to release a new version
+
+You can find the PostgreSQL version installed by this cartridge by looking at the `Version` token in [metadata/manifest.yml](https://github.com/icflorescu/openshift-cartridge-postgresql/blob/master/metadata/manifest.yml).
+If you notice it's behind the latest stable release from [bigsql.org](http://www.bigsql.org/postgresql/installers.jsp), fork the repo, change the version number, **make sure to test** a fresh deployment on your OpenShift account, then submit a PR. 
 
 ## Credits
 
-See contributors [here](https://github.com/icflorescu/openshift-cartridge-postgresql/graphs/contributors).
+Built by [icflorescu](https://github.com/icflorescu). See contributors [here](https://github.com/icflorescu/openshift-cartridge-postgresql/graphs/contributors).
 
 If you find this repo useful, don't hesitate to give it a star and [spread the word](http://twitter.com/share?text=Checkout%20this%20custom%20PostgreSQL%20cartridge%20for%20OpenShift!&amp;url=http%3A%2F%2Fgithub.com/icflorescu/openshift-cartridge-postgresql&amp;hashtags=PostgreSQL,database,OpenShift&amp;via=icflorescu).
 

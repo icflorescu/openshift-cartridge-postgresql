@@ -1,6 +1,6 @@
 ---
 Name: postgresql
-Description: The world's most advanced open source database distributed by BigSQL.
+Description: The world's most advanced open source database packaged by BigSQL.
 Version: '9.5.3.3'
 License: ISC
 Vendor: BigSQL
