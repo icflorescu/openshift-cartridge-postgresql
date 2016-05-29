@@ -51,9 +51,9 @@ For instance, here's how you'd do it in a Node.js application using Knex.js:
       }
     });
 
-### Connect from a local development environment
+### Connect from a local development environment using `rhc port-forward`
 
-Use `rhc port-forward` to connect from a client application running on your local development machine.
+You can use `rhc port-forward` to connect from a client application running on your local development machine.
 
 If your PostgreSQL instance is running in a separate gear, you can find its gear id by running:
 
@@ -63,9 +63,19 @@ Then you can do port forwarding like this:
 
     rhc port-forward application-name -g gear-id
 
-Connect your client application to the created proxy host and port.
+Connect your client application to the port forwarded on `127.0.0.1`.
 
-Please **don't open issues in this repository to ask for help on using `rhc port-forward` or `rhc` utility in general**. Refer to the [OpenShift Online Documentation](https://developers.openshift.com/en/managing-port-forwarding.html) instead. If you still can't find what you're looking for, Google for it or ask on Stackoverflow.
+**Please don't open issues in this repository to ask for help on using `rhc port-forward`, or `rhc` utility in general.** Refer to the [OpenShift Online Documentation](https://developers.openshift.com/en/managing-port-forwarding.html) instead. If you still can't find what you're looking for, Google for it or ask on Stackoverflow. And if you still  can't figure it out, it's probably not safe for you to use it.
+
+### Connect from a local development environment using SSH tunnels
+
+Some SQL clients (like [DBeaver](http://dbeaver.jkiss.org/) or [Valentina Studio](https://www.valentina-db.com/en/valentina-studio-overview)) can create SSH tunnels, in which case you won't have to use the `rhc port-forward`. For instance, if you've deployed PostgreSQL in a separate gear, you'll have to configure the connection as following:
+
+- **Host** is the gear SSH URL **without the username part** as the host (could be something like `xxxxxxxxxxxxxxxxxxxxxxxx-awesomeapp.rhcloud.com`) and `$OPENSHIFT_PG_PROXY_PORT`;
+- **Database, username and password** are what you have in `$OPENSHIFT_PG_USERNAME`, `$OPENSHIFT_PG_USERNAME` and `$OPENSHIFT_PG_PASSWORD`;
+- In the **SSH tunnel config section**, use the same host and username and public key authentication with your SSH key (usually found in `~/ssh` folder).
+
+But your specific configuration may differ, so you'll have to figure it out by trial, error and consulting the appropriate documentation. **Please refrain from opening issues in this repository to ask for help on configuring your SQL client**. If you can't figure it out by yourself, it's probably not safe you to use it.
 
 ## Notes
 
