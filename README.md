@@ -34,9 +34,9 @@ Using `rhc` utility, you can also create "from scratch" an applocation based on 
 Use the following environment variables to connect from an application running in the main web cartridge:
 - `OPENSHIFT_PG_HOST`
 - `OPENSHIFT_PG_PORT`
-- `OPENSHIFT_PG_DATABASE`
 - `OPENSHIFT_PG_USERNAME`
 - `OPENSHIFT_PG_PASSWORD`
+- `OPENSHIFT_PG_DATABASE`
 
 For instance, here's how you'd do it in a Node.js application using Knex.js:
 
@@ -45,9 +45,9 @@ For instance, here's how you'd do it in a Node.js application using Knex.js:
       connection: {
         host     : process.env.OPENSHIFT_PG_HOST,
         port:    : process.env.OPENSHIFT_PG_PORT,
-        database : process.env.OPENSHIFT_PG_DATABASE,
         user     : process.env.OPENSHIFT_PG_USERNAME',
-        password : process.env.OPENSHIFT_PG_PASSWORD
+        password : process.env.OPENSHIFT_PG_PASSWORD,
+        database : process.env.OPENSHIFT_PG_DATABASE
       }
     });
 
@@ -78,10 +78,6 @@ Please **don't open issues in this repository to ask for help on using `rhc port
 - `psql` history files are created in `${OPENSHIFT_DATA_DIR}` folder;
 - The PostgreSQL shared folder is `${OPENSHIFT_DATA_DIR}.bigsql/pg95/share/postgresql`;
 
-### Superuser account
-
-The cartridge installation script also creates a PostgreSQL superuser and saves its name and password in `OPENSHIFT_PG_ADMIN_USERNAME` and `OPENSHIFT_PG_ADMIN_PASSWORD` environment variables. You can use the superuser account to perform various administrative tasks (such as `CREATE EXTENSION ...`, `VACUUM ...`, etc.).
-
 ### Unsupported features
 
 The autovacuum and statistics collection features are not supported by OpenShift setups (more info available [here](http://stackoverflow.com/questions/23215429/autovacuum-is-not-running-on-openshift-online-postgres-cartridge) and [here](https://bugzilla.redhat.com/show_bug.cgi?id=849428)).
@@ -89,7 +85,7 @@ A `vacuumdb -a -f` command is issued when executing the cartridge `tidy` script,
 
 ### Optional features
 
-In order to conserve space, the `postgis` extension is not installed by default. In order to use it, you'll have to login to your cartridge and run `postgres/bin/install-postgis`, then issue `CREATE EXTENSION postgis` SQL statement in a privileged connection (see the note on the superuser account above).
+In order to conserve space, the `postgis` extension is not installed by default. In order to use it, you'll have to login to your cartridge and run `postgres/bin/install-postgis`, then execute the SQL statement `CREATE EXTENSION postgis`.
 
 ### Full-text search for languages other than English
 

@@ -47,33 +47,26 @@ EOF
 # Start server
 pg_ctl start -w
 
-# Set admin password, create user and database
-pg_admin_password=$(generate_password)
+# Create database and user password
 pg_password=$(generate_password)
-psql -d postgres -c "ALTER USER "${OPENSHIFT_GEAR_UUID}" WITH PASSWORD '${pg_admin_password}'"
-psql -d postgres -c "CREATE USER "${OPENSHIFT_APP_NAME}" WITH PASSWORD '${pg_password}'"
+psql -d postgres -c "ALTER USER "${OPENSHIFT_GEAR_UUID}" WITH PASSWORD '${pg_password}'"
 psql -d postgres -c "CREATE DATABASE ${OPENSHIFT_APP_NAME}"
-psql -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${OPENSHIFT_APP_NAME} TO ${OPENSHIFT_APP_NAME}"
 
 # Add environment variables
-echo "${OPENSHIFT_GEAR_UUID}" > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_ADMIN_USERNAME
-echo "${pg_admin_password}"   > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_ADMIN_PASSWORD
-echo "${OPENSHIFT_APP_NAME}"  > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_DATABASE
-echo "${OPENSHIFT_APP_NAME}"  > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_USERNAME
+echo "${OPENSHIFT_GEAR_UUID}" > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_USERNAME
 echo "${pg_password}"         > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_PASSWORD
+echo "${OPENSHIFT_APP_NAME}"  > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_DATABASE
 
 # Output results
 client_result "PostgreSQL ${version} installed."
 client_result "Please save this info for future reference:"
-client_result "- Admin user ${OPENSHIFT_GEAR_UUID} with password ${pg_admin_password} created"
+client_result "- Created password ${pg_password} for user ${OPENSHIFT_GEAR_UUID}"
 client_result "- Database ${OPENSHIFT_APP_NAME} created"
-client_result "- User ${OPENSHIFT_APP_NAME} with password ${pg_password} and full privileges on ${OPENSHIFT_APP_NAME} database created"
 client_result "- You can login to this gear with ssh ${OPENSHIFT_GEAR_UUID}@${OPENSHIFT_GEAR_DNS}"
 client_result "- You can install postgis component by running postgres/bin/install-postgis script in this gear"
 client_result "- The following environment variables are available to your application:"
 client_result "  \$OPENSHIFT_PG_HOST, \$OPENSHIFT_PG_PORT and \$OPENSHIFT_PG_DATABASE"
 client_result "  \$OPENSHIFT_PG_USERNAME and \$OPENSHIFT_PG_PASSWORD"
-client_result "  \$OPENSHIFT_PG_ADMIN_USERNAME and \$OPENSHIFT_PG_ADMIN_PASSWORD (use these with care)"
 client_result "- You can connect from your development machine with:"
 if [ "${OPENSHIFT_APP_DNS}" == "${OPENSHIFT_GEAR_DNS}" ]; then
   client_result "  rhc port-forward -a ${OPENSHIFT_APP_NAME}"
