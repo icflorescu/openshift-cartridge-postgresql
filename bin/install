@@ -78,10 +78,3 @@ if [ "${OPENSHIFT_APP_DNS}" == "${OPENSHIFT_GEAR_DNS}" ]; then
 else
   client_result "  rhc port-forward -a ${OPENSHIFT_APP_NAME} -g ${OPENSHIFT_GEAR_UUID}"
 fi
-client_result "...or directly from a SSH-tunnel-enabled SQL client with:"
-client_result "  Host: ${OPENSHIFT_GEAR_DNS}"
-if [ "${OPENSHIFT_APP_DNS}" == "${OPENSHIFT_GEAR_DNS}" ]; then
-  client_result "  Port: ${OPENSHIFT_PG_PORT}"
-else
-  client_result "  Port: ${OPENSHIFT_PG_PROXY_PORT}"
-fi
