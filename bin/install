@@ -55,8 +55,11 @@ pg_ctl start -w
 
 # Create database and user password
 pg_password=$(generate_password)
-psql -d postgres -c "ALTER USER "${OPENSHIFT_GEAR_UUID}" WITH PASSWORD '${pg_password}'"
-psql -d postgres -c "CREATE DATABASE ${OPENSHIFT_APP_NAME}"
+psql -d postgres -c "ALTER USER "${OPENSHIFT_GEAR_UUID}" WITH PASSWORD '${pg_password}';"
+psql -d postgres -c "CREATE DATABASE ${OPENSHIFT_APP_NAME};"
+
+# Stop server
+pg_ctl stop -w -m fast
 
 # Add environment variables
 echo "${OPENSHIFT_GEAR_UUID}" > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_USERNAME
