@@ -64,17 +64,18 @@ echo "${pg_password}"         > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_PASSWORD
 echo "${OPENSHIFT_APP_NAME}"  > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_DATABASE
 
 # Output results
-client_result "PostgreSQL ${version} installed."
-client_result "Please save this info for future reference:"
-client_result "- Created password ${pg_password} for user ${OPENSHIFT_GEAR_UUID}"
-client_result "- Database ${OPENSHIFT_APP_NAME} created"
-client_result "- You can login directly to this gear with ssh ${OPENSHIFT_GEAR_UUID}@${OPENSHIFT_GEAR_DNS}"
-client_result "- You can install postgis component by running postgres/bin/install-postgis script in this gear"
-client_result "- The following environment variables are available to your application:"
-client_result "  \$OPENSHIFT_PG_HOST, \$OPENSHIFT_PG_PORT, \$OPENSHIFT_PG_USERNAME, \$OPENSHIFT_PG_PASSWORD \$OPENSHIFT_PG_DATABASE"
-client_result "- You can connect from your development machine using rhc with:"
+$result="PostgreSQL ${version} installed.\nEnvironment variables in main gear:\n"
+$result+=" OPENSHIFT_PG_HOST = ${$OPENSHIFT_GEAR_DNS} OPENSHIFT_PG_PORT = "
 if [ "${OPENSHIFT_APP_DNS}" == "${OPENSHIFT_GEAR_DNS}" ]; then
-  client_result "  rhc port-forward -a ${OPENSHIFT_APP_NAME}"
+  $result+=$OPENSHIFT_PG_PORT
 else
-  client_result "  rhc port-forward -a ${OPENSHIFT_APP_NAME} -g ${OPENSHIFT_GEAR_UUID}"
+  $result+=$OPENSHIFT_PG_PROXY_PORT
 fi
+$result+=" OPENSHIFT_PG_DATABASE = ${OPENSHIFT_APP_NAME}\n"
+$result+=" OPENSHIFT_PG_USERNAME = ${OPENSHIFT_GEAR_UUID} OPENSHIFT_PG_PASSWORD = ${pg_password}\n"
+$result+="SSH:\n ssh ${OPENSHIFT_GEAR_UUID}@${OPENSHIFT_GEAR_DNS}\n"
+$result+="RHC:\n rhc port-forward -a ${OPENSHIFT_APP_NAME}"
+if [ "${OPENSHIFT_APP_DNS}" == "${OPENSHIFT_GEAR_DNS}" ]; then
+  $result+=" -g ${OPENSHIFT_GEAR_UUID}"
+fi
+client_result $result
