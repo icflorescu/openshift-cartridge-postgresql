@@ -67,9 +67,9 @@ echo "${OPENSHIFT_APP_NAME}"  > $OPENSHIFT_PG_DIR/env/OPENSHIFT_PG_DATABASE
 $result="PostgreSQL ${version} installed.\nEnvironment variables in main gear:\n"
 $result+=" OPENSHIFT_PG_HOST = ${$OPENSHIFT_GEAR_DNS} OPENSHIFT_PG_PORT = "
 if [ "${OPENSHIFT_APP_DNS}" == "${OPENSHIFT_GEAR_DNS}" ]; then
-  $result+=$OPENSHIFT_PG_PORT
+  $result+="${OPENSHIFT_PG_PORT}"
 else
-  $result+=$OPENSHIFT_PG_PROXY_PORT
+  $result+="${OPENSHIFT_PG_PROXY_PORT}"
 fi
 $result+=" OPENSHIFT_PG_DATABASE = ${OPENSHIFT_APP_NAME}\n"
 $result+=" OPENSHIFT_PG_USERNAME = ${OPENSHIFT_GEAR_UUID} OPENSHIFT_PG_PASSWORD = ${pg_password}\n"
@@ -78,4 +78,4 @@ $result+="RHC:\n rhc port-forward -a ${OPENSHIFT_APP_NAME}"
 if [ "${OPENSHIFT_APP_DNS}" == "${OPENSHIFT_GEAR_DNS}" ]; then
   $result+=" -g ${OPENSHIFT_GEAR_UUID}"
 fi
-client_result $result
+client_result "${result}"
